@@ -1,20 +1,13 @@
 {
   "posts": [
     {
-      "id": "1",
-      "slug": "HI-all",
-      "title": "عنوان پست اول",
-      "excerpt": "خلاصه کوتاه پست که در کارت وبلاگ نمایش داده می‌شود.",
-      "cover": "https://example.com/images/cover1.jpg",
-      "content": "# عنوان\n\nمتن کامل پست به صورت **Markdown**.\n\n## زیرعنوان\n\n- آیتم اول\n- آیتم دوم"
-    },
-    {
-      "id": "2",
-      "slug": "second-post",
-      "title": "پست دوم",
-      "excerpt": "خلاصه پست دوم.",
-      "cover": "https://example.com/images/cover2.jpg",
-      "content": "محتوای Markdown پست دوم..."
+      "slug": "welcome-to-bizixer",
+      "title": "به بیزیکسرلند خوش آمدید",
+      "date": "2025-10-20T10:00:00Z",
+      "tags": ["اعلان", "شروع"],
+      "cover": "https://cdn.imgurl.ir/uploads/j08682_.jpg",
+      "excerpt": "اولین پست رسمی بیزیکسرلند — معرفی، قوانین و مسیر پیش رو.",
+      "content": "## مقدمه\n\nسلام به همه. این اولین پست رسمی **بیزیکسرلند** است.\n\n### چه چیزی در انتظار شماست\n\n- پروتکل‌های تازه\n- گزارش‌های میدانی\n- ابزارها\n\n> سکوت، دقت، اتحاد.\n\nبرای شروع، به [کانال روبیکا](https://rubika.ir/bizixer_LandBzx) سر بزنید.\n\n---\n\n## بخش دوم\n\nمتن اینجا ادامه پیدا می‌کند...\n\n```python\nprint(\"hello bizixer\")\n```\n"
     }
   ]
 }
