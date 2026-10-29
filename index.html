@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizixer Land</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #050510;
+            background-image:
+                radial-gradient(circle at 20% 10%, rgba(0,243,255,.12), transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(184,0,255,.12), transparent 40%);
+            color: #e5e7eb;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .neon {
+            background: linear-gradient(90deg,#00f3ff,#b800ff,#00f3ff);
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 12px rgba(0,243,255,.35);
+            letter-spacing: 1px;
+        }
+        .card {
+            background: rgba(10,10,25,.65);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0,243,255,.25);
+            box-shadow: 0 0 25px rgba(0,243,255,.08);
+            border-radius: 20px;
+        }
+        .btn {
+            transition: all .3s;
+            border: 1px solid rgba(0,243,255,.4);
+            background: rgba(0,243,255,.05);
+            color: #67e8f9;
+            text-decoration: none;
+        }
+        .btn:hover { background: rgba(0,243,255,.15); box-shadow: 0 0 18px rgba(0,243,255,.4); }
+        .btn-purple { border-color: rgba(184,0,255,.4); background: rgba(184,0,255,.05); color: #d8b4fe; }
+        .btn-purple:hover { background: rgba(184,0,255,.15); box-shadow: 0 0 18px rgba(184,0,255,.4); }
+
+        /* Full markdown */
+        .prose { line-height: 2; color: #d1d5db; font-size: 1rem; }
+        .prose h1 { font-size: 2.1rem; font-weight: 800; color: #00f3ff; margin: 2rem 0 1rem; padding-bottom: .5rem; border-bottom: 2px solid rgba(0,243,255,.2); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #b800ff; margin: 2rem 0 .8rem; padding-right: .75rem; padding-bottom: .25rem; border-right: 4px solid #b800ff; scroll-margin-top: 90px; }
+        .prose h3 { font-size: 1.15rem; font-weight: 700; color: #67e8f9; margin: 1.5rem 0 .5rem; }
+        .prose p  { margin: .9rem 0; }
+        .prose strong { color: #a5f3fc; font-weight: 700; }
+        .prose ul, .prose ol { margin: .75rem 0; padding-right: 1.75rem; }
+        .prose li { margin: .35rem 0; }
+        .prose ul li::marker { color: #00f3ff; }
+        .prose ol li::marker { color: #b800ff; }
+        .prose hr { border: none; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,243,255,.4), transparent); margin: 2rem 0; }
+        .prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: rgba(0,0,0,.3); border-radius: 12px; overflow: hidden; }
+        .prose th, .prose td { padding: .7rem 1rem; border-bottom: 1px solid rgba(0,243,255,.15); text-align: right; }
+        .prose th { background: rgba(0,243,255,.08); color: #67e8f9; font-weight: 700; }
+        .prose tr:last-child td { border-bottom: none; }
+        .prose code { background: rgba(0,243,255,.1); color: #67e8f9; padding: .1rem .4rem; border-radius: 6px; font-size: .9em; }
+        .prose blockquote { border-right: 4px solid #b800ff; background: rgba(184,0,255,.05); padding: .5rem 1rem; margin: 1rem 0; border-radius: 8px; color: #d8b4fe; }
+
+        /* Mini markdown preview (home) */
+        .md-preview { max-height: 220px; overflow: hidden; position: relative; }
+        .md-preview::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+            background: linear-gradient(to top, rgba(10,10,25,.95), transparent);
+            pointer-events: none;
+        }
+        .md h1 { font-size: 1.5rem; color: #00f3ff; margin: 1rem 0 .6rem; }
+        .md h2 { font-size: 1.2rem; color: #b800ff; margin: 1rem 0 .5rem; }
+        .md h3 { font-size: 1rem; color: #67e8f9; margin: .8rem 0 .4rem; }
+        .md p  { margin: .4rem 0; line-height: 1.85; color: #d1d5db; font-size: .875rem; }
+        .md strong { color: #a5f3fc; }
+        .md ul, .md ol { padding-right: 1.25rem; margin: .4rem 0; }
+        .md li { margin: .2rem 0; color: #d1d5db; font-size: .875rem; }
+        .md hr { border-color: rgba(0,243,255,.15); margin: 1rem 0; }
+
+        /* Locked state */
+        .locked a { opacity: .55; cursor: not-allowed; }
+        .locked .cid { filter: blur(5px); user-select: none; }
+
+        /* TOC */
+        .toc-item {
+            display: block; padding: .4rem .6rem; border-radius: 8px;
+            color: #9ca3af; font-size: .8rem; transition: all .2s;
+            border-right: 2px solid transparent; text-decoration: none;
+        }
+        .toc-item:hover, .toc-item.active {
+            background: rgba(0,243,255,.12); color: #67e8f9; border-right-color: #00f3ff;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== Header ===== -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-black/60 border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="/" data-link class="flex items-center gap-2">
+                <span class="neon text-2xl font-extrabold uppercase">BIZIXER</span>
+                <span class="neon text-sm font-bold uppercase">LAND</span>
+            </a>
+            <nav class="flex items-center gap-2">
+                <a href="/" data-link class="btn px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
+                    <i class="fa-solid fa-house"></i> خانه
+                </a>
+                <a href="/constitution" data-link class="btn btn-purple px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1">
+                    <i class="fa-solid fa-scroll"></i> قانون اساسی
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ============ HOME VIEW ============ -->
+        <section data-view="home" hidden>
+            <div class="max-w-2xl mx-auto px-4 py-8">
+                <div class="card p-6 md:p-8 text-center">
+                    <h1 class="neon text-4xl font-extrabold uppercase">Bizixer</h1>
+                    <h2 class="neon text-2xl font-bold uppercase mt-1">Land</h2>
+
+                    <div class="mt-3 mb-5 inline-block px-3 py-1 rounded-full border border-purple-500/50 bg-purple-500/10 text-purple-300 text-xs">
+                        <i class="fa-solid fa-code ml-1"></i> سازنده: <span id="creator-name">...</span>
+                    </div>
+
+                    <section class="text-right mb-5">
+                        <h3 class="text-lg font-bold text-cyan-300 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-scroll"></i> قانون اساسی بیزیکسر لند
+                        </h3>
+                        <div class="bg-black/40 border border-cyan-500/30 rounded-xl p-4">
+                            <div id="preview" class="md md-preview">
+                                <p class="text-gray-500 text-sm">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                        <a href="/constitution" data-link
+                           class="btn btn-purple inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-xl text-purple-300 text-sm font-bold">
+                            <i class="fa-solid fa-book-open"></i>
+                            مشاهده متن کامل قانون اساسی
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                    </section>
+
+                    <div class="mb-5 p-3 rounded-xl border border-yellow-500/40 bg-yellow-500/10">
+                        <label class="flex items-center justify-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" class="accept-checkbox w-5 h-5 accent-cyan-400 cursor-pointer">
+                            <span class="text-yellow-200 font-bold text-sm">قانون اساسی را خوانده‌ام و قبول دارم</span>
+                        </label>
+                        <p class="text-xs text-yellow-300/70 mt-1">تا زمانی که تیک نزنید، لینک‌ها و آی‌دی کانال قفل هستند.</p>
+                    </div>
+
+                    <div data-links class="space-y-3 locked">
+                        <a id="channel-link" href="#" target="_blank" rel="noopener"
+                           class="btn flex items-center justify-between px-5 py-3 rounded-xl text-cyan-300">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-brands fa-telegram text-xl text-cyan-400"></i>
+                                <div class="text-right">
+                                    <div class="font-bold text-sm">کانال عمومی روبیکا</div>
+                                    <div id="channel-id" class="text-xs text-cyan-200/70 cid" dir="ltr">...</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                        <a id="join-link" href="#" target="_blank" rel="noopener"
+                           class="btn btn-purple flex items-center justify-between px-5 py-3 rounded-xl text-purple-300">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-users text-xl text-purple-400"></i>
+                                <div class="text-right">
+                                    <div class="font-bold text-sm">ورود به کمپانی</div>
+                                    <div class="text-xs text-purple-200/70">گروه رسمی روبیکا</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                        <p class="text-right text-xs text-red-400 mr-2 flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> لینک ورود ممکن است منقضی شده باشد.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 text-xs text-gray-500">&copy; <span id="year">2025</span> Bizixer Land</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ CONSTITUTION VIEW ============ -->
+        <section data-view="constitution" hidden>
+            <div class="max-w-5xl mx-auto px-4 pt-10 pb-4 text-center">
+                <div class="inline-block px-3 py-1 rounded-full border border-purple-500/50 bg-purple-500/10 text-purple-300 text-xs mb-3">
+                    <i class="fa-solid fa-scroll ml-1"></i> سند رسمی
+                </div>
+                <h1 class="neon text-3xl md:text-4xl font-extrabold mb-2">قانون اساسی بیزیکسر لند</h1>
+                <p class="text-gray-400 text-sm">متن کامل و رسمی قانون اساسی</p>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 pb-16 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
+                <aside class="card p-4 h-fit lg:sticky lg:top-20">
+                    <h3 class="text-cyan-300 font-bold text-sm mb-2 flex items-center gap-1">
+                        <i class="fa-solid fa-list"></i> فهرست
+                    </h3>
+                    <nav id="toc" class="space-y-0.5"></nav>
+                </aside>
+
+                <div class="card p-6 md:p-10">
+                    <article id="content" class="prose">
+                        <p class="text-gray-500">در حال بارگذاری...</p>
+                    </article>
+
+                    <hr class="my-8 border-cyan-500/20">
+
+                    <div class="p-4 rounded-xl border border-yellow-500/40 bg-yellow-500/10 text-center">
+                        <label class="flex items-center justify-center gap-3 cursor-pointer">
+                            <input type="checkbox" class="accept-checkbox w-5 h-5 accent-cyan-400 cursor-pointer">
+                            <span class="text-yellow-200 font-bold text-sm">قانون اساسی را خوانده‌ام و قبول دارم</span>
+                        </label>
+                        <p class="text-xs text-yellow-300/70 mt-2">با پذیرش، لینک‌های صفحه اصلی باز می‌شوند.</p>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <a href="/" data-link class="btn btn-purple inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold">
+                            <i class="fa-solid fa-arrow-right"></i> بازگشت به خانه
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+    // ============================================================
+    //  State + helpers
+    // ============================================================
+    marked.setOptions({ breaks: true, gfm: true });
+
+    const KEY = 'bizixer_law_accepted';
+    const state = {
+        config: null,
+        constitution: null,
+        loadedConfig: false,
+        loadedConstitution: false,
+        accepted: localStorage.getItem(KEY) === '1',
+        currentRoute: null,
+    };
+
+    async function apiGet(path) {
+        const res = await fetch(path, { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) {
+            let detail = `HTTP ${res.status}`;
+            try { detail = (await res.json()).detail || detail; } catch (_) {}
+            throw new Error(detail);
+        }
+        return res.json();
+    }
+
+    async function loadConfig() {
+        if (state.loadedConfig) return state.config;
+        state.config = await apiGet('/api/config');
+        state.loadedConfig = true;
+        return state.config;
+    }
+
+    async function loadConstitution() {
+        if (state.loadedConstitution) return state.constitution;
+        const data = await apiGet('/api/constitution');
+        state.constitution = data.content;
+        state.loadedConstitution = true;
+        return state.constitution;
+    }
+
+    // ============================================================
+    //  Accept-state
+    // ============================================================
+    function applyLock() {
+        document.querySelectorAll('[data-links]').forEach(el => {
+            el.classList.toggle('locked', !state.accepted);
+        });
+        document.querySelectorAll('.accept-checkbox').forEach(el => {
+            el.checked = state.accepted;
+        });
+    }
+
+    function setAccepted(v) {
+        state.accepted = v;
+        localStorage.setItem(KEY, v ? '1' : '0');
+        applyLock();
+    }
+
+    document.querySelectorAll('.accept-checkbox').forEach(el => {
+        el.addEventListener('change', () => setAccepted(el.checked));
+    });
+
+    document.querySelectorAll('[data-links]').forEach(container => {
+        container.addEventListener('click', (e) => {
+            if (!container.classList.contains('locked')) return;
+            const link = e.target.closest('a');
+            if (link) {
+                e.preventDefault();
+                e.stopPropagation();
+                alert('ابتدا قانون اساسی را بخوانید و تیک پذیرش را بزنید.');
+            }
+        });
+    });
+
+    // ============================================================
+    //  Views
+    // ============================================================
+    async function renderHome() {
+        try {
+            const [config, md] = await Promise.all([loadConfig(), loadConstitution()]);
+            if (state.currentRoute !== 'home') return;
+
+            document.getElementById('creator-name').textContent = config.creator || '';
+            document.getElementById('year').textContent = config.year;
+            document.getElementById('channel-link').href = config.channel_url;
+            document.getElementById('channel-id').textContent = config.channel_id;
+            document.getElementById('join-link').href = config.join_url;
+
+            const slice = md.substring(0, 1400);
+            const cut = slice.lastIndexOf('\n');
+            const body = slice.substring(0, cut > 0 ? cut : slice.length);
+            document.getElementById('preview').innerHTML = marked.parse(body);
+        } catch (err) {
+            document.getElementById('preview').innerHTML =
+                '<p class="text-red-400 text-sm">خطا: ' + err.message + '</p>';
+        }
+        applyLock();
+    }
+
+    let tocObserver = null;
+    function buildToc(content) {
+        const toc = document.getElementById('toc');
+        toc.innerHTML = '';
+        if (tocObserver) { tocObserver.disconnect(); tocObserver = null; }
+
+        const headings = content.querySelectorAll('h2');
+        headings.forEach((h, i) => {
+            if (!h.id) h.id = 'sec-' + i;
+            const a = document.createElement('a');
+            a.href = '#' + h.id;
+            a.className = 'toc-item';
+            a.textContent = h.textContent;
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById(h.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            toc.appendChild(a);
+        });
+
+        tocObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.toc-item').forEach((el) => {
+                        el.classList.toggle('active', el.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { rootMargin: '-80px 0px -70% 0px' });
+        headings.forEach((h) => tocObserver.observe(h));
+    }
+
+    async function renderConstitution() {
+        try {
+            const md = await loadConstitution();
+            if (state.currentRoute !== 'constitution') return;
+            const content = document.getElementById('content');
+            content.innerHTML = marked.parse(md);
+            buildToc(content);
+        } catch (err) {
+            document.getElementById('content').innerHTML =
+                '<p class="text-red-400">خطا در بارگذاری: ' + err.message + '</p>';
+        }
+        applyLock();
+    }
+
+    // ============================================================
+    //  Router
+    // ============================================================
+    function getRoute() {
+        const p = window.location.pathname.replace(/\/+$/, '') || '/';
+        if (p === '/constitution') return 'constitution';
+        return 'home';
+    }
+
+    function renderView() {
+        const route = getRoute();
+        state.currentRoute = route;
+        document.querySelectorAll('[data-view]').forEach(el => {
+            el.hidden = el.dataset.view !== route;
+        });
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        if (route === 'home') renderHome();
+        else renderConstitution();
+    }
+
+    function navigate(path) {
+        if (window.location.pathname === path) return;
+        history.pushState({}, '', path);
+        renderView();
+    }
+
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[data-link]');
+        if (!link) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        navigate(link.getAttribute('href'));
+    });
+
+    window.addEventListener('popstate', renderView);
+
+    // ============================================================
+    //  Boot
+    // ============================================================
+    renderView();
+    </script>
+</body>
+</html>
