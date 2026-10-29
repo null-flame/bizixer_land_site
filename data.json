@@ -1,0 +1,20 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "slug": "HI-all",
+      "title": "عنوان پست اول",
+      "excerpt": "خلاصه کوتاه پست که در کارت وبلاگ نمایش داده می‌شود.",
+      "cover": "https://example.com/images/cover1.jpg",
+      "content": "# عنوان\n\nمتن کامل پست به صورت **Markdown**.\n\n## زیرعنوان\n\n- آیتم اول\n- آیتم دوم"
+    },
+    {
+      "id": "2",
+      "slug": "second-post",
+      "title": "پست دوم",
+      "excerpt": "خلاصه پست دوم.",
+      "cover": "https://example.com/images/cover2.jpg",
+      "content": "محتوای Markdown پست دوم..."
+    }
+  ]
+}

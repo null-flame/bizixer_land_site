@@ -58,10 +58,37 @@
         .md ul, .md ol { padding-right: 1.25rem; margin: .4rem 0; }
         .md li { margin: .2rem 0; color: #d1d5db; font-size: .875rem; }
         .md hr { border-color: rgba(0,243,255,.15); margin: 1rem 0; }
+
+        /* 博客卡片 */
+        .blog-card {
+            transition: all .3s;
+            border: 1px solid rgba(0,243,255,.2);
+            background: rgba(10,10,25,.5);
+        }
+        .blog-card:hover {
+            border-color: rgba(0,243,255,.5);
+            box-shadow: 0 0 20px rgba(0,243,255,.15);
+            transform: translateY(-2px);
+        }
+        .blog-cover {
+            width: 100%; height: 140px; object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+        /* 帖子详情中的 Markdown */
+        .post-content h1 { font-size: 1.8rem; color: #00f3ff; margin: 1.5rem 0 .8rem; }
+        .post-content h2 { font-size: 1.4rem; color: #b800ff; margin: 1.2rem 0 .6rem; }
+        .post-content h3 { font-size: 1.1rem; color: #67e8f9; margin: 1rem 0 .5rem; }
+        .post-content p { margin: .7rem 0; line-height: 2; color: #d1d5db; }
+        .post-content ul, .post-content ol { padding-right: 1.5rem; margin: .6rem 0; }
+        .post-content li { margin: .3rem 0; color: #d1d5db; }
+        .post-content img { border-radius: 12px; margin: 1rem 0; }
+        .post-content hr { border-color: rgba(0,243,255,.15); margin: 1.5rem 0; }
+        .post-content blockquote { border-right: 3px solid #b800ff; background: rgba(184,0,255,.05); padding: .5rem 1rem; border-radius: 8px; color: #d8b4fe; margin: 1rem 0; }
     </style>
 </head>
 <body>
-    <div class="panel max-w-2xl mx-auto p-6 md:p-8 text-center">
+    <!-- ========== 主页内容 ========== -->
+    <div id="home-view" class="panel max-w-2xl mx-auto p-6 md:p-8 text-center">
         <h1 class="neon text-4xl font-extrabold uppercase">Bizixer</h1>
         <h2 class="neon text-2xl font-bold uppercase mt-1">Land</h2>
 
@@ -69,23 +96,32 @@
             <i class="fa-solid fa-code ml-1"></i> سازنده: Hamid.vexor
         </div>
 
+        <!-- ---- 宪法区域（预览默认隐藏） ---- -->
         <section class="text-right mb-5">
-            <h3 class="text-lg font-bold text-cyan-300 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-scroll"></i> قانون اساسی بیزیکسر لند
-            </h3>
-            <div class="bg-black/40 border border-cyan-500/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-bold text-cyan-300 flex items-center gap-2">
+                    <i class="fa-solid fa-scroll"></i> قانون اساسی بیزیکسر لند
+                </h3>
+                <button id="toggle-preview" class="btn btn-purple px-3 py-1 rounded-lg text-purple-300 text-xs font-bold inline-flex items-center gap-1">
+                    <i class="fa-solid fa-eye"></i> دیدن قانون اساسی
+                </button>
+            </div>
+
+            <!-- 预览区域，默认隐藏 -->
+            <div id="constitution-preview" class="hidden bg-black/40 border border-cyan-500/30 rounded-xl p-4">
                 <div id="preview" class="md md-preview">
                     <p class="text-gray-500 text-sm">در حال بارگذاری...</p>
                 </div>
             </div>
-            <a href="/constitution"
-               class="btn btn-purple inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-xl text-purple-300 text-sm font-bold">
+
+            <a href="/constitution" class="btn btn-purple inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-xl text-purple-300 text-sm font-bold">
                 <i class="fa-solid fa-book-open"></i>
                 مشاهده متن کامل قانون اساسی
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
         </section>
 
+        <!-- ---- 接受条款 ---- -->
         <div class="mb-5 p-3 rounded-xl border border-yellow-500/40 bg-yellow-500/10">
             <label class="flex items-center justify-center gap-3 cursor-pointer select-none">
                 <input type="checkbox" id="accept" class="w-5 h-5 accent-cyan-400 cursor-pointer">
@@ -94,9 +130,9 @@
             <p class="text-xs text-yellow-300/70 mt-1">تا زمانی که تیک نزنید، لینک‌ها و آی‌دی کانال قفل هستند.</p>
         </div>
 
+        <!-- ---- 链接区域 ---- -->
         <div id="links" class="space-y-3 locked">
-            <a href="{{ channel_url }}" target="_blank" rel="noopener"
-               class="btn flex items-center justify-between px-5 py-3 rounded-xl text-cyan-300">
+            <a href="{{ channel_url }}" target="_blank" rel="noopener" class="btn flex items-center justify-between px-5 py-3 rounded-xl text-cyan-300">
                 <div class="flex items-center gap-3">
                     <i class="fa-brands fa-telegram text-xl text-cyan-400"></i>
                     <div class="text-right">
@@ -106,8 +142,7 @@
                 </div>
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
-            <a href="{{ join_url }}" target="_blank" rel="noopener"
-               class="btn btn-purple flex items-center justify-between px-5 py-3 rounded-xl text-purple-300">
+            <a href="{{ join_url }}" target="_blank" rel="noopener" class="btn btn-purple flex items-center justify-between px-5 py-3 rounded-xl text-purple-300">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-users text-xl text-purple-400"></i>
                     <div class="text-right">
@@ -122,7 +157,27 @@
             </p>
         </div>
 
+        <!-- ---- 博客区域 ---- -->
+        <section class="mt-8 text-right">
+            <h3 class="text-lg font-bold text-cyan-300 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-newspaper"></i> وبلاگ
+            </h3>
+            <div id="blog-list" class="space-y-4">
+                <p class="text-gray-500 text-sm text-center">در حال بارگذاری پست‌ها...</p>
+            </div>
+        </section>
+
         <div class="mt-6 text-xs text-gray-500">&copy; {{ year }} Bizixer Land</div>
+    </div>
+
+    <!-- ========== 帖子详情视图 ========== -->
+    <div id="post-view" class="panel max-w-2xl mx-auto p-6 md:p-8 hidden">
+        <button id="back-to-home" class="btn px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1 mb-4">
+            <i class="fa-solid fa-arrow-right"></i> بازگشت به خانه
+        </button>
+        <div id="post-detail-content">
+            <p class="text-gray-500">در حال بارگذاری...</p>
+        </div>
     </div>
 
     <script>
@@ -132,6 +187,7 @@
         const accept = document.getElementById('accept');
         const links = document.getElementById('links');
 
+        // ---------- 宪法接受逻辑 ----------
         function applyLock() {
             links.classList.toggle('locked', !accept.checked);
         }
@@ -148,8 +204,28 @@
             }
         });
 
-        (async () => {
+        // ---------- 宪法预览显示/隐藏 ----------
+        const toggleBtn = document.getElementById('toggle-preview');
+        const previewBox = document.getElementById('constitution-preview');
+        let previewLoaded = false;
+
+        toggleBtn.addEventListener('click', () => {
+            previewBox.classList.toggle('hidden');
+            const isHidden = previewBox.classList.contains('hidden');
+            toggleBtn.innerHTML = isHidden
+                ? '<i class="fa-solid fa-eye"></i> دیدن قانون اساسی'
+                : '<i class="fa-solid fa-eye-slash"></i> بستن پیش‌نمایش';
+
+            // 首次展开时加载内容
+            if (!isHidden && !previewLoaded) {
+                loadConstitutionPreview();
+                previewLoaded = true;
+            }
+        });
+
+        async function loadConstitutionPreview() {
             const el = document.getElementById('preview');
+            el.innerHTML = '<p class="text-gray-500 text-sm">در حال بارگذاری...</p>';
             try {
                 const res = await fetch('/api/constitution');
                 if (!res.ok) throw new Error('خطا در دریافت');
@@ -160,7 +236,146 @@
             } catch (err) {
                 el.innerHTML = '<p class="text-red-400 text-sm">خطا: ' + err.message + '</p>';
             }
-        })();
+        }
+
+        // ============================================================
+        // 博客 & 路由
+        // ============================================================
+        let allPosts = [];
+        let postsLoaded = false;
+
+        // 兼容 { posts: [...] } 或直接数组
+        function normalizePosts(data) {
+            if (Array.isArray(data)) return data;
+            if (data && Array.isArray(data.posts)) return data.posts;
+            return [];
+        }
+
+        async function fetchPosts() {
+            if (postsLoaded) return allPosts;
+            try {
+                const res = await fetch('/api/posts');
+                if (!res.ok) throw new Error('خطا در دریافت پست‌ها');
+                const data = await res.json();
+                allPosts = normalizePosts(data);
+                postsLoaded = true;
+                return allPosts;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('blog-list').innerHTML =
+                    '<p class="text-red-400 text-sm text-center">خطا در بارگذاری پست‌ها: ' + err.message + '</p>';
+                return [];
+            }
+        }
+
+        function renderBlogList(posts) {
+            const container = document.getElementById('blog-list');
+            if (posts.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm text-center">هیچ پستی یافت نشد.</p>';
+                return;
+            }
+            container.innerHTML = posts.map(post => {
+                const slug = post.slug || post.id;
+                const cover = post.cover || '';
+                const excerpt = post.excerpt || '';
+                return `
+                    <a href="/post/${encodeURIComponent(slug)}"
+                       class="blog-card block rounded-xl overflow-hidden" data-slug="${slug}">
+                        ${cover ? `<img src="${cover}" alt="${post.title || ''}" class="blog-cover" loading="lazy">` : ''}
+                        <div class="p-4 text-right">
+                            <h4 class="font-bold text-cyan-300 text-base mb-1">${post.title || 'بدون عنوان'}</h4>
+                            <p class="text-xs text-gray-400 line-clamp-2">${excerpt}</p>
+                            <div class="mt-2 text-xs text-purple-300/60" dir="ltr">${slug}</div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        // 显示主页
+        async function showHome() {
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('post-view').classList.add('hidden');
+            if (!postsLoaded) {
+                const posts = await fetchPosts();
+                renderBlogList(posts);
+            }
+        }
+
+        // 显示帖子详情
+        async function showPostDetail(slug) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('post-view').classList.remove('hidden');
+            const container = document.getElementById('post-detail-content');
+            container.innerHTML = '<p class="text-gray-500">در حال بارگذاری...</p>';
+
+            const posts = await fetchPosts();
+            const post = posts.find(p => (p.slug || p.id) === slug);
+
+            if (!post) {
+                container.innerHTML = '<p class="text-red-400 text-center">پست مورد نظر یافت نشد.</p>';
+                return;
+            }
+
+            document.title = (post.title || 'پست') + ' | Bizixer Land';
+
+            const coverHtml = post.cover
+                ? `<img src="${post.cover}" alt="${post.title || ''}" class="w-full rounded-xl mb-4" style="max-height:300px;object-fit:cover;">`
+                : '';
+
+            const contentHtml = post.content
+                ? marked.parse(post.content)
+                : '<p class="text-gray-500">محتوایی برای نمایش وجود ندارد.</p>';
+
+            container.innerHTML = `
+                <article class="text-right">
+                    ${coverHtml}
+                    <h1 class="text-2xl font-extrabold text-cyan-300 mb-2">${post.title || 'بدون عنوان'}</h1>
+                    <div class="text-xs text-purple-300/60 mb-4" dir="ltr">${post.slug || post.id}</div>
+                    <div class="post-content">${contentHtml}</div>
+                </article>
+            `;
+        }
+
+        // 路由处理
+        function handleRoute() {
+            const path = window.location.pathname;
+            const match = path.match(/^\/post\/([^/]+)$/);
+            if (match) {
+                const slug = decodeURIComponent(match[1]);
+                showPostDetail(slug);
+            } else {
+                document.title = 'Bizixer Land';
+                showHome();
+            }
+        }
+
+        // 拦截博客链接点击，实现 SPA 跳转
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="/post/"]');
+            if (link) {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                history.pushState({}, '', href);
+                handleRoute();
+            }
+        });
+
+        // 返回主页按钮
+        document.getElementById('back-to-home').addEventListener('click', () => {
+            history.pushState({}, '', '/');
+            handleRoute();
+        });
+
+        // 浏览器前进/后退
+        window.addEventListener('popstate', handleRoute);
+
+        // 初始化
+        if (window.location.pathname.startsWith('/post/')) {
+            handleRoute();
+        } else {
+            showHome();
+        }
     </script>
 </body>
 </html>
